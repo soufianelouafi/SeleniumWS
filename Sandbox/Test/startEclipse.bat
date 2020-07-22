@@ -1,0 +1,1 @@
+call C:\tools\eclipse\startSeleniumEclipse2.bat C:\Sandbox\Test C:\Sandbox\Test\workspace
