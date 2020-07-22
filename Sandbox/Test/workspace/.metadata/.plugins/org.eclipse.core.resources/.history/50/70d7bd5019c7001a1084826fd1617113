@@ -1,0 +1,130 @@
+package com.avaya.gsmb.seleniumframework.config;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Properties;
+
+public class SeleniumProperties {
+	
+	private static String m_PropertyFilePath;
+	private static String m_TestPropertyFilePath;
+	private static Properties m_Properties = null;
+	private static Properties m_TestProperties=null;
+	
+	private SeleniumProperties() {
+	
+	}
+
+	public static void setPropertyFilePath(String propertyFilePath,String testPropertyFilePath) {
+		m_PropertyFilePath=propertyFilePath;
+		m_TestPropertyFilePath=testPropertyFilePath;
+	}
+	
+	public static String getTestProperty(String key) {
+		
+		String keyValue = "";
+		
+		if (m_TestProperties==null) {
+			
+			FileInputStream fis;
+			try {
+				fis = new FileInputStream(m_TestPropertyFilePath);
+				m_TestProperties =new Properties();
+			    try {
+					m_TestProperties.load(fis);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					m_TestProperties=null;
+				}
+				
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+		}
+			
+		if (m_TestProperties!=null) {
+				
+			keyValue=m_TestProperties.getProperty(key);
+		}
+		return keyValue;
+		    
+		    
+ 	}
+		
+		
+	public static String getProperty(String key) {
+		
+		String keyValue = "";
+		
+		if (m_Properties==null) {
+			
+			FileInputStream fis;
+			try {
+				fis = new FileInputStream(m_PropertyFilePath);
+				m_Properties =new Properties();
+			    try {
+					m_Properties.load(fis);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					m_Properties=null;
+				}
+				
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		    
+		}
+		
+		if (m_Properties!=null) {
+			
+			keyValue=m_Properties.getProperty(key);
+		}
+	    return keyValue;
+	    
+	}
+	
+	public static void setTestProperty(String key) {
+		
+		String keyValue = "";
+		
+		if (m_TestProperties==null) {
+			
+			FileInputStream fis;
+			try {
+				fis = new FileInputStream(m_TestPropertyFilePath);
+				m_TestProperties =new Properties();
+			    try {
+					m_TestProperties.load(fis);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					m_TestProperties=null;
+				}
+				
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		    
+		}
+		
+		if (m_TestProperties!=null) {
+			
+			m_TestProperties.put(key, keyValue);
+		}
+		
+		
+			
+	}
+	
+	public static String getApplicationURL() {
+		return getProperty("SMGR.url");
+	}
+
+}

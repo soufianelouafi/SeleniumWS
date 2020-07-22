@@ -1,0 +1,122 @@
+package com.avaya.gsmb.seleniumframework.test;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+
+import com.avaya.gsmb.seleniumframework.config.SeleniumProperties;
+
+/**
+ * This <b>Class</b> is mapping the WebDriver, initializing property files and is to be inherited by the actual TestApplication.
+ * @author admin
+ *
+ */
+public abstract class TestApplication {
+	
+	String [] m_driverMapping = {
+			"browser.Chrome",
+			"browser.Firefox"
+			};
+			
+
+	
+    protected WebDriver m_driver;
+    
+    
+    public TestApplication(){
+    
+    }
+    
+    /**
+     * Maps the <i>WebDriver</i> and starts the Test
+     */
+    
+    public void start() {
+    	
+    	 propetyFileInit(); 
+    	 
+    	 String [] driverProperty = {
+    				"browser.Chrome",
+    				"browser.Firefox"
+    				};
+    	
+    		
+    	
+    	// maps driver
+        for(int iBrowser = 0 ; iBrowser<driverProperty.length; iBrowser++) {
+
+    		 String driverLocation = SeleniumProperties.getProperty(driverProperty[iBrowser]);
+    		 if(driverLocation==null||driverLocation.isEmpty()) {
+    			 continue;
+    		 }
+    		 
+            switch (iBrowser) {
+            	case 1:
+                   System.setProperty("webdriver.gecko.driver", driverLocation );
+                    m_driver = new FirefoxDriver();
+                    break;
+                case 0:
+                   System.setProperty("webdriver.chrome.driver", driverLocation);
+                    m_driver = new ChromeDriver();
+                    break;
+                default:
+                    continue;
+            }
+           
+           startTest();
+           TestCase.closeLog();
+           
+           m_driver=null;
+        }
+    }
+   
+
+    protected abstract void startTest();
+    
+    /**
+     * Initializes property files
+     */
+    
+    private void propetyFileInit(){
+    	
+    	//gets class name
+    	String propertyFileName=this.getClass().getSimpleName();
+    	
+    	//gets absolute path and cuts it
+        String absolute = getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
+        absolute = absolute.substring(1, absolute.length() - 1 );
+        absolute = absolute.substring(0, absolute.lastIndexOf("/"));
+        absolute = absolute.substring(0, absolute.lastIndexOf("/") + 1);
+        
+        //sets the property file paths
+        String propertyFilePath = absolute + "conf/"+propertyFileName+".properties";
+        String testPropertyFilePath= absolute + "conf/Test.properties";
+        
+        //replaces redundant characters 
+        String os = System.getProperty("os.name");
+        if (os.indexOf("Windows") != -1) {
+        	propertyFilePath = propertyFilePath.replace("/", "\\\\");
+            if (propertyFilePath.indexOf("file:\\\\") != -2) {
+                propertyFilePath = propertyFilePath.replace("file:\\\\", "");
+            }
+            testPropertyFilePath = testPropertyFilePath.replace("/", "\\\\");
+            if (testPropertyFilePath.indexOf("file:\\\\") != -2) {
+            	testPropertyFilePath = testPropertyFilePath.replace("file:\\\\", "");
+            }
+        } else {
+        	if (propertyFilePath.indexOf("file:") != -2) {
+        		propertyFilePath = propertyFilePath.replace("file:", "");
+        	}		
+        	if (testPropertyFilePath.indexOf("file:") != -2) {
+        		testPropertyFilePath = testPropertyFilePath.replace("file:", "");
+        	}		
+        }
+        
+        //prints the property location
+        //System.out.println("Result" +propertyFilePath);
+    	
+        SeleniumProperties.setPropertyFilePath(propertyFilePath, testPropertyFilePath);
+    	
+    }
+
+}

@@ -1,0 +1,245 @@
+package com.avaya.gsmb.auradeploymenttest;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.avaya.gsmb.seleniumframework.config.SeleniumProperties;
+
+/**
+ *This <b>Class</b> inherits from the Class <b>TestApplication</b> and tests the Application. 
+ */
+
+import com.avaya.gsmb.seleniumframework.test.TestApplication;
+
+public class AuraDeploymentTestApplication extends TestApplication  {
+	
+	
+	
+	public AuraDeploymentTestApplication()  {
+		
+		super();
+	}
+	
+	public void setUpPropertyFile(WebDriver driver){
+
+	m_driver.get(SeleniumProperties.getProperty("MAESTRO.url"));
+	
+	
+	try {
+   	 WebElement advBTN= m_driver.findElement(By.id("advancedButton"));
+   	 advBTN.click();
+   	 m_driver.findElement(By.id("exceptionDialogButton")).click();
+  	}
+    catch (NoSuchElementException e) {
+    	m_driver.findElement(By.id("details-button")).click(); 
+       	m_driver.findElement(By.id("proceed-link")).click();
+   }
+	
+	
+   	
+   	
+	m_driver.findElement(By.id("username")).sendKeys(SeleniumProperties.getTestProperty("MAESTRO.uid"));
+   	m_driver.findElement(By.id("password")).sendKeys(SeleniumProperties.getTestProperty("MAESTRO.pwd"));
+   	m_driver.findElement(By.cssSelector("body > div.container > form > input.btn.btn-primary")).click();
+   	
+   	try {
+		Thread.sleep(6000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+   	m_driver.findElement(By.cssSelector("#navsolutions > a:nth-child(1)")).click();
+
+
+		try {
+			Thread.sleep(6000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+	WebElement getSubMenu= m_driver.findElement(By.cssSelector("nav.navbar.navbar-inverse.navbar-fixed-top:nth-child(1) div.container div.navbar-collapse.collapse ul.nav.navbar-nav li.dropdown.active.open:nth-child(2) ul.dropdown-menu li:nth-child(1) > a:nth-child(1)"));
+   	getSubMenu.click();
+		
+   	m_driver.findElement(By.cssSelector("#solutionsTable > tbody > tr > td.bs-checkbox > input[type=radio]")).click();
+   	m_driver.switchTo().defaultContent();
+   	m_driver.findElement(By.cssSelector("#detailsButton")).click();
+   	
+   	WebDriverWait wait;
+	try {
+		wait = new WebDriverWait(driver, 30);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[3]/div[1]/span[2]/span[1]/button[1]")));
+		m_driver.findElement(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[3]/div[1]/span[2]/span[1]/button[1]")).click();
+		m_driver.findElement(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[3]/div[1]/span[2]/span[1]/ul[1]/li[2]/a[1]")).click();
+	} catch (Exception e) {
+		
+	}
+   	
+   	//SMGR UI.pwd and uid
+   	wait = new WebDriverWait(driver, 30);
+   	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//tr[contains(.,'smgr_instance_1')]")));
+   	WebElement element = m_driver.findElement(By.xpath("//tr[contains(.,'smgr_instance_1')]"));
+	m_driver.findElement(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[2]/table[1]/tbody[1]/tr["+((Integer.parseInt(element.getAttribute("data-index")))+1)+"]/td[2]")).click();
+	wait = new WebDriverWait(driver, 30);
+   	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html[1]/body[1]/div[1]/div[3]/div[1]/div[1]/div[2]/div[1]/div[1]/div[3]/div[2]/ul[1]/li[3]/a[1]")));
+	m_driver.findElement(By.xpath("/html[1]/body[1]/div[1]/div[3]/div[1]/div[1]/div[2]/div[1]/div[1]/div[3]/div[2]/ul[1]/li[3]/a[1]")).click();
+	
+   	try {
+		wait = new WebDriverWait(driver, 30);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html[1]/body[1]/div[1]/div[3]/div[1]/div[1]/div[2]/div[1]/div[1]/div[3]/div[1]/span[2]/span[1]/button[1]/span[1]")));
+		m_driver.findElement(By.xpath("/html[1]/body[1]/div[1]/div[3]/div[1]/div[1]/div[2]/div[1]/div[1]/div[3]/div[1]/span[2]/span[1]/button[1]/span[1]")).click();
+		m_driver.findElement(By.xpath("/html[1]/body[1]/div[1]/div[3]/div[1]/div[1]/div[2]/div[1]/div[1]/div[3]/div[1]/span[2]/span[1]/ul[1]/li[2]/a[1]")).click();
+	} catch (Exception e) {
+		
+	}
+	
+	wait = new WebDriverWait(driver, 30);
+   	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//tr[contains(.,'ui_username')]")));
+	
+   	element = m_driver.findElement(By.xpath("//tr[contains(.,'ui_username')]"));
+	SeleniumProperties.setTestProperty("SMGR.uid", element.getText().replace("ui_username ", ""));
+   	element = m_driver.findElement(By.xpath("//tr[contains(.,'ui_password')]"));
+	SeleniumProperties.setTestProperty("SMGR.pwd", element.getText().replace("ui_password ", ""));
+   	element = m_driver.findElement(By.xpath("//tr[contains(.,'ip_address_1')]"));
+	SeleniumProperties.setProperty("SMGR.url","https://"+ element.getText().replace("ip_address_1 ", ""));
+	m_driver.findElement(By.cssSelector("body.modal-open:nth-child(2) div.container div.modal.fade.in:nth-child(5) div.modal-dialog.modal-md:nth-child(1) div.modal-content div.modal-header > button.close")).click();
+
+	//CM pwd and uid
+   	wait = new WebDriverWait(driver, 30);
+   	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//tr[contains(.,'cm_duplex_instance_1')]")));
+    element = m_driver.findElement(By.xpath("//tr[contains(.,'cm_duplex_instance_1')]"));
+	m_driver.findElement(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[2]/table[1]/tbody[1]/tr["+((Integer.parseInt(element.getAttribute("data-index")))+1)+"]/td[2]")).click();
+	
+	try {
+		wait = new WebDriverWait(driver, 30);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html[1]/body[1]/div[1]/div[3]/div[1]/div[1]/div[2]/div[1]/div[1]/div[3]/div[1]/span[2]/span[1]/button[1]/span[1]")));
+		m_driver.findElement(By.xpath("/html[1]/body[1]/div[1]/div[3]/div[1]/div[1]/div[2]/div[1]/div[1]/div[3]/div[1]/span[2]/span[1]/button[1]/span[1]")).click();
+		m_driver.findElement(By.xpath("/html[1]/body[1]/div[1]/div[3]/div[1]/div[1]/div[2]/div[1]/div[1]/div[3]/div[1]/span[2]/span[1]/ul[1]/li[2]/a[1]")).click();
+	} catch (Exception e) {
+		
+	}
+	
+	
+	wait = new WebDriverWait(driver, 30);
+   	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[contains(.,'cli_password')]")));
+   	element = m_driver.findElement(By.xpath("//td[contains(.,'cli_password')]"));
+   	System.out.println(element.getAttribute("data-index"));
+   	
+	
+   	try {
+		Thread.sleep(6000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+   	
+   	element = m_driver.findElement(By.xpath("//tr[contains(.,'cli_username')]"));
+	SeleniumProperties.setTestProperty("CM.uid", element.getText().replace("cli_username ", ""));
+   	element = m_driver.findElement(By.xpath("//tr[contains(.,'ip_address_1')]"));
+	SeleniumProperties.setProperty("CM.url","https://"+ element.getText().replace("ip_address_1 ", ""));
+	m_driver.findElement(By.cssSelector("body.modal-open:nth-child(2) div.container div.modal.fade.in:nth-child(5) div.modal-dialog.modal-md:nth-child(1) div.modal-content div.modal-header > button.close")).click();
+   	
+	//AES pwd and uid
+	wait = new WebDriverWait(driver, 30);
+   	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//tr[contains(.,'aes_instance_2')]")));
+    element = m_driver.findElement(By.xpath("//tr[contains(.,'aes_instance_2')]"));
+	m_driver.findElement(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[2]/table[1]/tbody[1]/tr["+((Integer.parseInt(element.getAttribute("data-index")))+1)+"]/td[2]")).click();
+	
+	try {
+		wait = new WebDriverWait(driver, 30);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html[1]/body[1]/div[1]/div[3]/div[1]/div[1]/div[2]/div[1]/div[1]/div[3]/div[1]/span[2]/span[1]/button[1]/span[1]")));
+		m_driver.findElement(By.xpath("/html[1]/body[1]/div[1]/div[3]/div[1]/div[1]/div[2]/div[1]/div[1]/div[3]/div[1]/span[2]/span[1]/button[1]/span[1]")).click();
+		m_driver.findElement(By.xpath("/html[1]/body[1]/div[1]/div[3]/div[1]/div[1]/div[2]/div[1]/div[1]/div[3]/div[1]/span[2]/span[1]/ul[1]/li[2]/a[1]")).click();
+	} catch (Exception e) {
+		
+	}
+	
+	
+	wait = new WebDriverWait(driver, 30);
+   	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//tr[contains(.,'cli_username')]")));
+	
+   	element = m_driver.findElement(By.xpath("//tr[contains(.,'cli_username')]"));
+	SeleniumProperties.setTestProperty("AES.uid", element.getText().replace("cli_username ", ""));
+   	element = m_driver.findElement(By.xpath("//tr[contains(.,'cli_password')]"));
+	SeleniumProperties.setTestProperty("AES.pwd", element.getText().replace("cli_password ", ""));
+	m_driver.findElement(By.cssSelector("body.modal-open:nth-child(2) div.container div.modal.fade.in:nth-child(5) div.modal-dialog.modal-md:nth-child(1) div.modal-content div.modal-header > button.close")).click();
+   	
+	//PS pwd and uid
+	wait = new WebDriverWait(driver, 30);
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//tr[contains(.,'ps_instance_1')]")));
+	element = m_driver.findElement(By.xpath("//tr[contains(.,'ps_instance_1')]"));
+	m_driver.findElement(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[2]/table[1]/tbody[1]/tr["+((Integer.parseInt(element.getAttribute("data-index")))+1)+"]/td[2]")).click();
+		
+	try {
+		wait = new WebDriverWait(driver, 30);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html[1]/body[1]/div[1]/div[3]/div[1]/div[1]/div[2]/div[1]/div[1]/div[3]/div[1]/span[2]/span[1]/button[1]/span[1]")));
+		m_driver.findElement(By.xpath("/html[1]/body[1]/div[1]/div[3]/div[1]/div[1]/div[2]/div[1]/div[1]/div[3]/div[1]/span[2]/span[1]/button[1]/span[1]")).click();
+		m_driver.findElement(By.xpath("/html[1]/body[1]/div[1]/div[3]/div[1]/div[1]/div[2]/div[1]/div[1]/div[3]/div[1]/span[2]/span[1]/ul[1]/li[2]/a[1]")).click();
+	} catch (Exception e) {
+		
+	}
+	
+	
+	wait = new WebDriverWait(driver, 30);
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//tr[contains(.,'cli_username')]")));
+		
+	element = m_driver.findElement(By.xpath("//tr[contains(.,'cli_username')]"));
+	SeleniumProperties.setTestProperty("PS.uid", element.getText().replace("cli_username ", ""));
+	element = m_driver.findElement(By.xpath("//tr[contains(.,'cli_password')]"));
+	SeleniumProperties.setTestProperty("PS.pwd", element.getText().replace("cli_password ", ""));
+   	element = m_driver.findElement(By.xpath("//tr[contains(.,'ip_address_1')]"));
+	SeleniumProperties.setProperty("PS.url","https://"+ element.getText().replace("ip_address_1 ", ""));
+	m_driver.findElement(By.cssSelector("body.modal-open:nth-child(2) div.container div.modal.fade.in:nth-child(5) div.modal-dialog.modal-md:nth-child(1) div.modal-content div.modal-header > button.close")).click();
+	   	
+		
+	}	
+	/**
+	 * instantiates the Class <b>Login</b> and starts the Testing
+	 */
+	
+	public void startTest()  {	      
+		
+		setUpPropertyFile(m_driver);
+		
+		SMGRLogin login=new SMGRLogin(m_driver);
+        login.startTest();
+        
+        SMGRSyncStatus sync=new SMGRSyncStatus(m_driver);
+        sync.startTest();
+        
+        BreezeServerCheck servCheck=new BreezeServerCheck(m_driver);
+        servCheck.startTest();
+        
+        BreezeClusterCheck clustCheck=new BreezeClusterCheck(m_driver);
+        clustCheck.startTest();
+        
+        PSCheck installCheck=new PSCheck(m_driver);
+        installCheck.startTest();
+        
+        SMCheck smCheck=new SMCheck(m_driver);
+        smCheck.startTest();
+        
+        //PSLogin ps=new PSLogin(m_driver);
+        //ps.startTest();
+        
+        CMLogin cm=new CMLogin(m_driver);
+        cm.startTest();
+		
+        CMStatus cmStatus=new CMStatus(m_driver);
+        cmStatus.startTest();
+		
+        AESLogin aes=new AESLogin(m_driver);
+        aes.startTest();
+        
+        AESCheck aesCheck=new AESCheck(m_driver);
+        aesCheck.startTest();
+        
+        m_driver.quit();
+}
+	
+}

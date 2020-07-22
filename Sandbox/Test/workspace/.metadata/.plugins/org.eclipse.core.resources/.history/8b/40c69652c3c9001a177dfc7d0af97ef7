@@ -1,0 +1,228 @@
+package com.avaya.gsmb.auradeploymenttest;
+
+import java.util.NoSuchElementException;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchFrameException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+
+import com.avaya.gsmb.seleniumframework.test.TestCase;
+
+public class SMCheck extends TestCase{
+
+	public SMCheck(WebDriver driver) {
+		super(driver);
+		// TODO Auto-generated constructor stub
+	}
+
+	
+	/**
+	 * Starting the Test Case for the Application Login
+	 */
+	
+	public void start() {
+		
+		
+		System.out.println("\n"+"----------------Session Manager Check--------------------"+"\n");
+		
+		//Actions action = new Actions(m_driver);
+		//WebElement we = m_driver.findElement(By.xpath("//a[@class='ant-dropdown-link home-dropdown-menu ant-dropdown-trigger']//span[contains(text(),'Elements')]"));
+		//action.moveToElement(we).moveToElement(m_driver.findElement(By.xpath("//a[contains(text(),'Cluster Administration')]"))).click().build().perform();
+		
+		m_driver.switchTo().defaultContent();
+		
+		WebElement getMenu= m_driver.findElement(By.partialLinkText("Elements"));
+		
+		Actions act = new Actions(m_driver);
+		act.moveToElement(getMenu).perform();
+
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		WebElement getSubMenu= m_driver.findElement(By.partialLinkText("Session Manager"));
+		
+		act = new Actions(m_driver);
+		act.moveToElement(getSubMenu).perform();
+		WebElement clickElement= m_driver.findElement(By.partialLinkText("Dashboard"));
+		act.moveToElement(clickElement).click().perform();
+		
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		try {
+			m_driver.switchTo().frame(m_driver.findElement(By.xpath("//iframe[contains(@src,'/ASM')]")));
+		} catch (NoSuchFrameException e) {
+			// TODO Auto-generated catch block
+		}
+		
+		
+		
+		WebElement element = m_driver.findElement(By.id("asmDashboardTable:0:smNameLink"));
+		System.out.println("Name: "+element.getText());
+		
+		element = m_driver.findElement(By.id("asmDashboardTable:0:maintTestImg"));
+		
+		if(element.getAttribute("src").endsWith("greenarrow.gif")){
+			System.out.println("Test Pass: successful");
+			logInfo("SM01 Test Pass-->passed");
+		}else{
+			System.out.println("Test Pass: failed");
+			logError("SM01 Test Pass-->not passed");
+			 }
+		
+		element = m_driver.findElement(By.id("asmDashboardTable:0:colSMAlarmsLink"));
+		System.out.println("Alarms: "+element.getText());
+		
+		if(element.getText().contains("0/0/0")){
+			logInfo("SM01 Alarms-->: "+element.getText());
+		}else{
+			logError("SM01 Alarms-->: "+element.getText());
+			 }
+		
+		element = m_driver.findElement(By.id("asmDashboardTable:0:linkToSecMod"));
+		System.out.println("SM01 Security Module: "+element.getText());
+		
+		if(element.getText().contains("Up")){
+			logInfo("SM01 Security Module-->"+element.getText());
+		}else{
+			logError("SM01 Security Module-->"+element.getText());
+		}
+		
+		element = m_driver.findElement(By.id("asmDashboardTable:0:colSmSvcStatetext"));
+		System.out.println("Service State: "+element.getText());
+		
+		if(element.getText().contains("Accepting")){
+			logInfo("SM01 Service State-->: "+element.getText());
+		}else{
+			logError("SM01 Service State-->: "+element.getText());
+		}
+		
+		element = m_driver.findElement(By.name("asmDashboardTable:0:replicationImg"));
+		
+		if(element.getAttribute("src").endsWith("greenarrow.gif")){
+			System.out.println("Data Replication: successful");
+			logInfo("SM01 Data Replication-->successful");
+		}else{
+			System.out.println("Data Replication: failed");
+			logError("SM01 Data Replication-->failure");
+			 }
+		
+		element = m_driver.findElement(By.name("asmDashboardTable:0:ustoreStatusImg"));
+		
+		if(element.getAttribute("src").endsWith("greenarrow.gif")){
+			System.out.println("User Data Storage: successful");
+			logInfo("SM01 User Data Storage-->successful");
+		}else{
+			System.out.println("User Data Storage: failed");
+			logError("SM01 User Data Storage-->failure");
+			 }
+		
+			element = m_driver.findElement(By.id("asmDashboardTable:0:colLicensetext"));
+			System.out.println("License Mode: "+element.getText());
+			
+			if(element.getText().contains("Error")){
+				logError("SM01 License Mode-->"+element.getText());
+			}else{
+				logError("SM01 License Mode-->"+element.getText());
+			}
+			
+			try {
+				m_driver.findElement(By.id("asmDashboardTable:1:smNameLink"));
+				
+				element = m_driver.findElement(By.id("asmDashboardTable:1:smNameLink"));
+				System.out.println("\n"+"Name: "+element.getText());
+				
+				element = m_driver.findElement(By.id("asmDashboardTable:1:maintTestImg"));
+				
+				if(element.getAttribute("src").endsWith("greenarrow.gif")){
+					System.out.println("Test Pass: successful");
+					logInfo("SM02 Test Pass-->passed");
+				}else{
+					System.out.println("Test Pass: failed");
+					logError("SM02 Test Pass-->not passed");
+					 }
+				
+				element = m_driver.findElement(By.id("asmDashboardTable:1:colSMAlarmsLink"));
+				System.out.println("Alarms: "+element.getText());
+				
+				if(element.getText().contains("0/0/0")){
+					logInfo("SM02 Alarms-->: "+element.getText());
+				}else{
+					logError("SM02 Alarms-->: "+element.getText());
+					 }
+				
+				element = m_driver.findElement(By.id("asmDashboardTable:1:linkToSecMod"));
+				System.out.println("Security Module: "+element.getText());
+				
+				if(element.getText().contains("Up")){
+					logInfo("SM02 Security Module-->"+element.getText());
+				}else{
+					logError("SM02 Security Module-->"+element.getText());
+				}
+				
+				element = m_driver.findElement(By.id("asmDashboardTable:1:colSmSvcStatetext"));
+				System.out.println("Service State: "+element.getText());
+				
+				if(element.getText().contains("Accepting")){
+					logInfo("SM02 Service State-->: "+element.getText());
+				}else{
+					logError("SM02 Service State-->: "+element.getText());
+				}
+				
+				element = m_driver.findElement(By.name("asmDashboardTable:1:replicationImg"));
+				
+				if(element.getAttribute("src").endsWith("greenarrow.gif")){
+					System.out.println("Data Replication: successful");
+					logInfo("SM02 Data Replication-->successful");
+				}else{
+					System.out.println("Data Replication: failed");
+					logError("SM02 Data Replication-->failure");
+					 }
+				
+				element = m_driver.findElement(By.name("asmDashboardTable:1:ustoreStatusImg"));
+				
+				if(element.getAttribute("src").endsWith("greenarrow.gif")){
+					System.out.println("User Data Storage: successful");
+					logInfo("SM02 User Data Storage-->successful");
+				}else{
+					System.out.println("User Data Storage: failed");
+					logError("SM02 User Data Storage-->failure");
+					 }
+				
+				element = m_driver.findElement(By.id("asmDashboardTable:1:colLicensetext"));
+				System.out.println("License Mode: "+element.getText());
+				
+				if(element.getText().contains("Error")){
+					logError("SM02 License Mode-->"+element.getText());
+				}else{
+					logError("SM02 License Mode-->"+element.getText());
+				}
+				
+			} catch (NoSuchElementException e1) {
+				
+			}
+	
+		    
+		try {
+			Thread.sleep(6000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+    }
+	
+	
+		
+}

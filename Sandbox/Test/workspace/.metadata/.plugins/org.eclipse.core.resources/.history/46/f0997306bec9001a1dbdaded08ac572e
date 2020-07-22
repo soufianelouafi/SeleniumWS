@@ -1,0 +1,96 @@
+package com.avaya.gsmb.auradeploymenttest;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+
+import com.avaya.gsmb.seleniumframework.test.TestCase;
+
+public class CMStatus extends TestCase{
+
+	public CMStatus(WebDriver driver) {
+		super(driver);
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * Starting the Test Case for the Application Login
+	 */
+	
+	public void start() {
+		
+		
+		System.out.println("\n"+"----------------Communication Manager Status--------------------"+"\n");
+		
+		//Actions action = new Actions(m_driver);
+		//WebElement we = m_driver.findElement(By.xpath("//a[@class='ant-dropdown-link home-dropdown-menu ant-dropdown-trigger']//span[contains(text(),'Elements')]"));
+		//action.moveToElement(we).moveToElement(m_driver.findElement(By.xpath("//a[contains(text(),'Cluster Administration')]"))).click().build().perform();
+		
+		WebElement getMenu= m_driver.findElement(By.cssSelector("#topNavMenu > ul:nth-child(2) > li:nth-child(1) > a:nth-child(1)"));
+		
+		Actions act = new Actions(m_driver);
+		act.moveToElement(getMenu).perform();
+
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		WebElement clickElement= m_driver.findElement(By.cssSelector("#topNavBG > li:nth-child(2) > a:nth-child(1)"));
+		act.moveToElement(clickElement).click().perform();
+		
+		m_driver.findElement(By.partialLinkText("Status Summary")).click();
+	
+		WebElement element = m_driver.findElement(By.cssSelector("#statusSummaryForm > pre:nth-child(1)"));
+		System.out.println(element.getText());
+		
+		if (element.getText().contains("Standby Refreshed? yes")) {
+			System.out.println("Standby Refresh: yes");
+		}else {
+				System.out.println("Standby Refresh: no");
+		}
+		
+		
+		if (element.getText().contains("Duplication Link: up")) {
+			System.out.println("Duplication Link: up");
+		}else {
+				System.out.println("Duplication Link: down");
+		}
+		
+		
+		
+		String statusSummary= element.getText();
+		String cmActive=statusSummary.substring(statusSummary.indexOf("Mode:")+6, statusSummary.indexOf("Major Alarms"));
+		
+		
+		
+		if(cmActive.startsWith("Active")) {
+			String	cm1Active="CM1 with ID 001 (1) Mode is Active";
+			System.out.println(cm1Active);
+		}else {
+				String cm1Standby="CM1 with ID 001 (1) is in Standby";
+				System.out.println(cm1Standby);
+		}
+		
+		if(cmActive.contains("Mode: Active")) { 
+			String	cm2Active="CM2 with ID 002 (2) is Active";
+			System.out.println(cm2Active);
+		}else {
+				String	cm2Standby="CM2 with ID 002 (2) is in Standby";
+				System.out.println(cm2Standby);
+		}
+			
+		
+		try {
+			Thread.sleep(6000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+    }	
+	
+}

@@ -1,0 +1,9 @@
+#Tue Jun 02 08:45:32 CEST 2020
+browser.Chrome=C:\\tools\\chromedriver_win32\\workaround.bat
+#browser.Firefox=C:\\tools\\geckodriver-v0.26.0-win64\\geckodriver.exe
+seleniumLog=C:\\Sandbox\\Test\\Log\\Log.xlsm
+MAESTRO.url=
+SMGR.url=https://135.124.94.165
+CM.url=https://135.124.94.167
+PS.url=https://ixws01eqbrz1-sm100.rse.local/services/PresenceServices/
+AES.url=https://135.124.94.173

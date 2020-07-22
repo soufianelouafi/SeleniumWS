@@ -1,0 +1,135 @@
+package com.avaya.gsmb.auradeploymenttest;
+
+
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+
+import com.avaya.gsmb.seleniumframework.test.TestCase;
+
+public class BreezeServerCheck extends TestCase{
+	
+	boolean present;
+
+	public BreezeServerCheck(WebDriver driver) {
+		super(driver);
+		// TODO Auto-generated constructor stub
+	}
+	
+	/**
+	 * Starting the Test Case for the Application Login
+	 */
+	
+	public void start() {
+		
+		System.out.println("\n"+"----------------Breeze Server Check--------------------"+"\n");
+		
+		//Actions action = new Actions(m_driver);
+		//WebElement we = m_driver.findElement(By.xpath("//a[@class='ant-dropdown-link home-dropdown-menu ant-dropdown-trigger']//span[contains(text(),'Elements')]"));
+		//action.moveToElement(we).moveToElement(m_driver.findElement(By.xpath("//a[contains(text(),'Cluster Administration')]"))).click().build().perform();
+		
+		WebElement getMenu= m_driver.findElement(By.partialLinkText("Elements"));
+		
+		Actions act = new Actions(m_driver);
+		act.moveToElement(getMenu).perform();
+
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		WebElement getSubMenu= m_driver.findElement(By.partialLinkText("Avaya Breeze®"));
+		
+		act = new Actions(m_driver);
+		act.moveToElement(getSubMenu).perform();
+		WebElement clickElement= m_driver.findElement(By.partialLinkText("Server Administration"));
+		act.moveToElement(clickElement).click().perform();
+		
+
+		m_driver.switchTo().frame("iframe0");
+		
+		WebElement element = m_driver.findElement(By.id("ausInstanceTable:0:clusterName"));
+		System.out.println("Cluster Name: "+element.getText());
+		
+		
+		element = m_driver.findElement(By.id("ausInstanceTable:0:serviceStatusIcon"));
+		
+		if(element.getAttribute("src").endsWith("Check-icon.png")){
+			System.out.println("Service Install Status: successful");
+			logInfo("Service Install Status-->successful");
+		}else{
+			System.out.println("Service Install Status: failed");
+			logError("Service Install Status-->failure");
+			 }
+		
+		element = m_driver.findElement(By.id("ausInstanceTable:0:maintTestImg"));
+		
+		if(element.getAttribute("src").endsWith("Check-icon.png")){
+			System.out.println("Test Pass: successful");
+			logInfo("Test Pass-->passed");
+		}else{
+			System.out.println("Test Pass: failed");
+			logError("Test Pass-->not passed");
+			 }
+		
+		element = m_driver.findElement(By.id("ausInstanceTable:0:systemState"));
+		System.out.println("System State: "+element.getText());
+		
+		
+		
+		element = m_driver.findElement(By.id("ausInstanceTable:0:security"));
+		System.out.println("Security Module: "+element.getText());
+		if(element.getText().contains("Up")) {
+			logInfo("Security Modue Check-->UP");
+		}else{
+			logError("Security Modue Check-->UP");
+		}
+		
+
+			try {
+				present=true;
+				element = m_driver.findElement(By.name("ausInstanceTable:0:instanceNLicenseStatusIcon"));
+				
+				if(element.getAttribute("src").endsWith("Check-icon.png")){
+					System.out.println("Licence Mode: successful");
+					logInfo("License Mode-->successful");
+				}else{
+					System.out.println("License Mode: failed");
+					logError("License Mode-->failure");
+					 }
+			} catch (NoSuchElementException e1) {
+				present=false;
+				try {
+					element = m_driver.findElement(By.cssSelector("td.xlg:nth-child(10) > table:nth-child(1)"));
+					System.out.println("Licence Mode: Warning-> "+element.getText());
+				} catch (NullPointerException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+		
+		element = m_driver.findElement(By.cssSelector("div.avx_r1_table_and_control_bar_wrapper div.tableStyle.r1_table_border_style.avx_r1_table_border_style:nth-child(2) div.non_ie_scroll_div.cc_table_wrapper:nth-child(4) table.r1_table_content.avx_r1_table_content tbody:nth-child(1) tr.xlm:nth-child(2) td.xlg.xbc:nth-child(11) > img.zrChecksumIcon"));
+		
+		if(element.getAttribute("src").endsWith("Check-icon.png")){
+			System.out.println("Overload Status: successful");
+		}else{
+			System.out.println("Overload Status: failed");
+			 }
+		
+		try {
+			Thread.sleep(6000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+    }	
+	
+
+}
