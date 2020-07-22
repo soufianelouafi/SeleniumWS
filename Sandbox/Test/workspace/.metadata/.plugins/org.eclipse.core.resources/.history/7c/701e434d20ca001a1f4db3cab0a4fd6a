@@ -1,8 +1,0 @@
-#Mon Jul 20 02:22:34 CEST 2020
-MAESTRO.url=https\://135.124.92.160/\#
-SMGR.url=https\://135.124.94.165
-browser.Chrome=C\:\\tools\\chromedriver_win32\\workaround.bat
-seleniumLog=C\:\\Sandbox\\Test\\Log\\Log.xlsm
-AES.url=https\://135.124.94.173
-CM.url=https\://135.124.94.167
-PS.url=https\://135.124.94.181
